@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strings"
 )
 
 func login(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +14,13 @@ func login(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error when parsing file", err)
 		return
 	}
-	err = t.ExecuteTemplate(w, fileName, nil)
+
+	type Ninja struct {
+		Name  string
+		Level int
+	}
+
+	err = t.ExecuteTemplate(w, fileName, Ninja{Name: "Please log in", Level: 9001}) // data (nil/ "Please log in"): for substitution data which will be represented in html file
 	if err != nil {
 		fmt.Println("Error when executing template", err)
 		return
@@ -43,6 +50,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		login(w, r)
 	case "/login-submit": // todo: handle login credentials
 		loginSubmit(w, r)
+	case "/function":
+		fileName := "function.html"
+		funcMap := map[string]interface{}{
+			"upper": strings.ToUpper,
+		}
+		t, err := template.New(fileName).Funcs(funcMap).ParseFiles(fileName)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		t.ExecuteTemplate(w, fileName, "Hello Ninjas")
 	default:
 		fmt.Fprintf(w, "Sup Ninjas")
 	}

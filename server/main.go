@@ -52,7 +52,7 @@ func body(w http.ResponseWriter, r *http.Request) {
 		name = "Guest"
 	}
 
-	w.Write([]byte(fmt.Sprintf("Hello, %s!", name)))
+	w.Write([]byte(fmt.Sprintf(`{"name":"%v"}`, name)))
 }
 
 func main() {

@@ -53,4 +53,26 @@ func main() {
 		data, _ := io.ReadAll(response.Body)
 		fmt.Println(string(data))
 	}
+
+	// New Request
+	client := http.Client{} // this client object helps send the request
+	request, err := http.NewRequest(
+		"GET",
+		"http://localhost/body",
+		bytes.NewBuffer(wallaceJson),
+	)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err = client.Do(request)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		data, _ := io.ReadAll(response.Body)
+		fmt.Println(string(data))
+	}
 }
